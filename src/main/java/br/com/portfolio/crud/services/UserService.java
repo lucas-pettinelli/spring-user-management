@@ -30,13 +30,23 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+
+        try {
+            repository.deleteById(id);
+        } catch (ResourceNotFoundException e) {
+
+        }
     }
 
     public User update(Long id, User usuario) {
-        User cadastro = repository.getReferenceById(id);
-        updateData(cadastro, usuario);
-        return repository.save(cadastro);
+        try {
+            User cadastro = repository.getReferenceById(id);
+            updateData(cadastro, usuario);
+            return repository.save(cadastro);
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException(id);
+        }
+
     }
 
     private void updateData(User cadastro, User usuario) {
